@@ -9,8 +9,8 @@ public class PlayerMovement : MonoBehaviour {
 	private Vector2 direction;
 	private Vector3 lastPosition;
 	private float moveTimer;
-	private bool hitSomething = false;
 	
+	[HideInInspector] public bool hitSomething = false;
 	public float MoveSpeed;
 	public int PlayerNumber;
 	public GameObject TrailObject;
@@ -24,6 +24,10 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			direction = Vector2.down;
 		}
+		else if (PlayerNumber == 2)
+		{
+			direction = Vector2.up;
+		}
 	}
 	
 	// Update is called once per frame
@@ -33,7 +37,11 @@ public class PlayerMovement : MonoBehaviour {
 		
 		if (PlayerNumber == 1)
 		{
-			changeDirectionP1();
+			ChangeDirectionP1();
+		}
+		else if (PlayerNumber == 2)
+		{
+			ChangeDirectionP2();
 		}
 
 		if (moveTimer >= MoveSpeed)
@@ -45,7 +53,7 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
-	void changeDirectionP1()
+	void ChangeDirectionP1()
 	{
 		if (Input.GetKeyDown(KeyCode.W))
 		{
@@ -60,6 +68,26 @@ public class PlayerMovement : MonoBehaviour {
 			direction = Vector2.down;
 		}
 		else if (Input.GetKeyDown(KeyCode.D))
+		{
+			direction = Vector2.right;
+		}
+	}
+	
+	void ChangeDirectionP2()
+	{
+		if (Input.GetKeyDown(KeyCode.UpArrow))
+		{
+			direction = Vector2.up;
+		}
+		else if (Input.GetKeyDown(KeyCode.LeftArrow))
+		{
+			direction = Vector2.left;
+		}
+		else if (Input.GetKeyDown(KeyCode.DownArrow))
+		{
+			direction = Vector2.down;
+		}
+		else if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
 			direction = Vector2.right;
 		}
