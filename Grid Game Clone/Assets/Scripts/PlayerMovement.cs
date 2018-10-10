@@ -20,6 +20,10 @@ public class PlayerMovement : MonoBehaviour {
 	{
 		rb = GetComponent<Rigidbody2D>();
 
+	}
+
+	private void OnEnable()
+	{
 		if (PlayerNumber == 1)
 		{
 			direction = Vector2.down;
@@ -29,7 +33,7 @@ public class PlayerMovement : MonoBehaviour {
 			direction = Vector2.up;
 		}
 	}
-	
+
 	// Update is called once per frame
 	void Update ()
 	{

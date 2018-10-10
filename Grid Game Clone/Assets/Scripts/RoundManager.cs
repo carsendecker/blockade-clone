@@ -51,13 +51,24 @@ public class RoundManager : MonoBehaviour
 		p1Script.enabled = false;
 		p2Script.enabled = false;
 		
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(2f);
+
+		GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
+		foreach (var wall in walls)
+		{
+			Destroy(wall);
+		}
 
 		Player1.transform.position = P1Spawn.position;
 		Player2.transform.position = P2Spawn.position;
 		
+		yield return new WaitForSeconds(1f);
+		
 		p1Script.enabled = true;
 		p2Script.enabled = true;
+
+		p1Script.hitSomething = false;
+		p2Script.hitSomething = false;
 		betweenRounds = false;
 	}
 }
