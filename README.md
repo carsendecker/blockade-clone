@@ -1,3 +1,3 @@
 # blockade-clone
 
-Game Link:
+Game Link: https://loch-nesrac.itch.io/blockade-clone
