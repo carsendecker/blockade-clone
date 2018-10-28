@@ -18,6 +18,7 @@ public class RoundManager : MonoBehaviour
 	private PlayerMovement[] playerScripts = new PlayerMovement[2];
 	private bool betweenRounds = false;
 	private int[] Scores = new int[2];
+
 	
 	// Use this for initialization
 	void Start ()
@@ -42,20 +43,33 @@ public class RoundManager : MonoBehaviour
 		
 		if (!betweenRounds)
 		{
-			if (playerScripts[0].hitSomething)
+			if (playerScripts[0].hitSomething || playerScripts[1].hitSomething)
 			{
-				Scores[0]++;
+				if (playerScripts[0].hitSomething && playerScripts[1].hitSomething)
+				{
+					Scores[0]++;
+					Scores[1]++;
+					PlayerObjects[0].GetComponent<FlashSprite>().FlashObject(true);
+					ScoreText[0].GetComponent<FlashText>().FlashObject(true);
+					PlayerObjects[1].GetComponent<FlashSprite>().FlashObject(true);
+					ScoreText[1].GetComponent<FlashText>().FlashObject(true);
+				}
+				else if (playerScripts[0].hitSomething)
+				{
+					Scores[1]++;
+					PlayerObjects[0].GetComponent<FlashSprite>().FlashObject(true);
+					ScoreText[1].GetComponent<FlashText>().FlashObject(true);
+				}
+				else if (playerScripts[1].hitSomething)
+				{
+					Scores[0]++;
+					PlayerObjects[1].GetComponent<FlashSprite>().FlashObject(true);
+					ScoreText[0].GetComponent<FlashText>().FlashObject(true);
+				}
+
 				ScoreText[0].enabled = true;
 				ScoreText[1].enabled = true;
-			
-				StartCoroutine(NewRound());
-			}
-			else if (playerScripts[1].hitSomething)
-			{
-				Scores[1]++;
-				ScoreText[0].enabled = true;
-				ScoreText[1].enabled = true;
-				
+
 				StartCoroutine(NewRound());
 			}
 		}
@@ -63,13 +77,19 @@ public class RoundManager : MonoBehaviour
 
 	IEnumerator NewRound()
 	{
+		GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
+		Destroy(walls[0]);
+		Destroy(walls[1]);
+		
 		betweenRounds = true;
 		playerScripts[0].enabled = false;
 		playerScripts[1].enabled = false;
 		
-		yield return new WaitForSeconds(2f);
+		
+		
+		yield return new WaitForSeconds(2.5f);
 
-		GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
+		walls = GameObject.FindGameObjectsWithTag("Wall");
 		foreach (var wall in walls)
 		{
 			Destroy(wall);
@@ -78,13 +98,18 @@ public class RoundManager : MonoBehaviour
 
 		PlayerObjects[0].transform.position = PlayerSpawnPoints[0].position;
 		PlayerObjects[1].transform.position = PlayerSpawnPoints[1].position;
+		
+		PlayerObjects[0].GetComponent<FlashSprite>().FlashObject(false);
+		ScoreText[0].GetComponent<FlashText>().FlashObject(false);
+		PlayerObjects[1].GetComponent<FlashSprite>().FlashObject(false);
+		ScoreText[1].GetComponent<FlashText>().FlashObject(false);
 
 		if (Scores[0] >= MaxScore || Scores[1] >= MaxScore)
 		{
 			EndText.enabled = true;
 			
-			ScoreText[0].gameObject.transform.position = EndText.transform.position + new Vector3(-60f, 0f, 0f);
-			ScoreText[1].gameObject.transform.position = EndText.transform.position + new Vector3(60f, 0f, 0f);
+			ScoreText[0].gameObject.transform.position = EndText.transform.position + new Vector3(-85f, 0f, 0f);
+			ScoreText[1].gameObject.transform.position = EndText.transform.position + new Vector3(85f, 0f, 0f);
 		}
 		else
 		{
