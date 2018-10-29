@@ -14,10 +14,15 @@ public class RoundManager : MonoBehaviour
 	public GameObject[] PlayerObjects;
 	public Text EndText;
 	public Text[] ScoreText;
+	
+	private AudioSource aso;
+	public AudioClip hitSound, dingSound;
+	
 
 	private PlayerMovement[] playerScripts = new PlayerMovement[2];
 	private bool betweenRounds = false;
 	private int[] Scores = new int[2];
+	private bool menuOpen = true;
 
 	
 	// Use this for initialization
@@ -28,6 +33,9 @@ public class RoundManager : MonoBehaviour
 
 		PlayerObjects[0].transform.position = PlayerSpawnPoints[0].position;
 		PlayerObjects[1].transform.position = PlayerSpawnPoints[1].position;
+
+		aso = GetComponent<AudioSource>();
+
 	}
 	
 	// Update is called once per frame
@@ -38,6 +46,20 @@ public class RoundManager : MonoBehaviour
 			ResetGame();
 		}
 
+		if (menuOpen)
+		{
+			playerScripts[0].enabled = false;
+			playerScripts[1].enabled = false;
+			if (Input.anyKeyDown)
+			{
+				menuOpen = false;
+				playerScripts[0].enabled = true;
+				playerScripts[1].enabled = true;
+				aso.PlayOneShot(dingSound);
+				SceneManager.UnloadSceneAsync("Menu");
+			}
+		}
+		
 		ScoreText[0].text = Scores[0].ToString();
 		ScoreText[1].text = Scores[1].ToString();
 		
@@ -69,6 +91,8 @@ public class RoundManager : MonoBehaviour
 
 				ScoreText[0].enabled = true;
 				ScoreText[1].enabled = true;
+				
+				aso.PlayOneShot(hitSound);
 
 				StartCoroutine(NewRound());
 			}
@@ -97,7 +121,10 @@ public class RoundManager : MonoBehaviour
 		
 
 		PlayerObjects[0].transform.position = PlayerSpawnPoints[0].position;
+		PlayerObjects[0].transform.rotation = playerScripts[0].startRotation;
+		
 		PlayerObjects[1].transform.position = PlayerSpawnPoints[1].position;
+		PlayerObjects[1].transform.rotation = playerScripts[1].startRotation;
 		
 		PlayerObjects[0].GetComponent<FlashSprite>().FlashObject(false);
 		ScoreText[0].GetComponent<FlashText>().FlashObject(false);
@@ -110,6 +137,10 @@ public class RoundManager : MonoBehaviour
 			
 			ScoreText[0].gameObject.transform.position = EndText.transform.position + new Vector3(-85f, 0f, 0f);
 			ScoreText[1].gameObject.transform.position = EndText.transform.position + new Vector3(85f, 0f, 0f);
+			ScoreText[0].enabled = true;
+			ScoreText[1].enabled = true;
+			
+			aso.PlayOneShot(dingSound);
 		}
 		else
 		{
@@ -131,5 +162,6 @@ public class RoundManager : MonoBehaviour
 	void ResetGame()
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Additive);
 	}
 }
