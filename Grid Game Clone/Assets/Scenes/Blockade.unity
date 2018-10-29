@@ -1513,7 +1513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f427d145af8384faa81b520db7bfb6af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxScore: 6
+  MaxScore: 5
   PlayerSpawnPoints:
   - {fileID: 344742007}
   - {fileID: 1795379808}

@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour {
 	private Vector3 lastPosition;
 	private float moveTimer;
 	
-	[HideInInspector] public bool hitSomething = false;
+	[HideInInspector] public bool hitSomething;
 	[HideInInspector] public Quaternion startRotation;
 	public float MoveSpeed;
 	public int PlayerNumber;

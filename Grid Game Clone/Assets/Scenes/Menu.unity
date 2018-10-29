@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.47058827, g: 0.9803922, b: 0.29803923, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.005622387, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -200,9 +200,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 767671d3a6197442eb773ee154a66c29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VisualComponent: {fileID: 602729586}
   FlashSpeed: 0.45
   EnabledOnAwake: 1
+  EndFlashVisible: 0
 --- !u!1 &791504386
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.47058827, g: 0.9803922, b: 0.29803923, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.005622387, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

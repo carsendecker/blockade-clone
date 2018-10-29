@@ -20,7 +20,7 @@ public class RoundManager : MonoBehaviour
 	
 
 	private PlayerMovement[] playerScripts = new PlayerMovement[2];
-	private bool betweenRounds = false;
+	private bool betweenRounds, keepScoreVisible;
 	private int[] Scores = new int[2];
 	private bool menuOpen = true;
 
@@ -46,6 +46,12 @@ public class RoundManager : MonoBehaviour
 			ResetGame();
 		}
 
+		if (keepScoreVisible)
+		{
+			ScoreText[0].enabled = true;
+			ScoreText[1].enabled = true;
+		}
+		
 		if (menuOpen)
 		{
 			playerScripts[0].enabled = false;
@@ -137,9 +143,8 @@ public class RoundManager : MonoBehaviour
 			
 			ScoreText[0].gameObject.transform.position = EndText.transform.position + new Vector3(-85f, 0f, 0f);
 			ScoreText[1].gameObject.transform.position = EndText.transform.position + new Vector3(85f, 0f, 0f);
-			ScoreText[0].enabled = true;
-			ScoreText[1].enabled = true;
-			
+
+			keepScoreVisible = true;
 			aso.PlayOneShot(dingSound);
 		}
 		else
