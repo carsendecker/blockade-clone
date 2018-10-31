@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	private Vector2 direction;
 	private Vector3 lastPosition;
+	private Quaternion newRotation;
 	private float moveTimer;
 	
 	[HideInInspector] public bool hitSomething;
@@ -15,6 +16,7 @@ public class PlayerMovement : MonoBehaviour {
 	public float MoveSpeed;
 	public int PlayerNumber;
 	public GameObject TrailObject;
+	public GameObject Confetti;
 
 	// Use this for initialization
 	void Start ()
@@ -29,10 +31,12 @@ public class PlayerMovement : MonoBehaviour {
 		if (PlayerNumber == 1)
 		{
 			direction = Vector2.down;
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 180);
 		}
 		else if (PlayerNumber == 2)
 		{
 			direction = Vector2.up;
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
 		}
 	}
 
@@ -54,6 +58,7 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			lastPosition = transform.position;
 			rb.position += direction;
+			transform.rotation = newRotation;
 			Instantiate(TrailObject, lastPosition, transform.rotation);
 			moveTimer = 0;
 		}
@@ -64,22 +69,22 @@ public class PlayerMovement : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.W))
 		{
 			direction = Vector2.up;
-			transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
 		}
 		else if (Input.GetKeyDown(KeyCode.A))
 		{
 			direction = Vector2.left;
-			transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 90);
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 90);
 		}
 		else if (Input.GetKeyDown(KeyCode.S))
 		{
 			direction = Vector2.down;
-			transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 180);
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 180);
 		}
 		else if (Input.GetKeyDown(KeyCode.D))
 		{
 			direction = Vector2.right;
-			transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -90);		
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -90);		
 		}
 	}
 	
@@ -88,28 +93,29 @@ public class PlayerMovement : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.UpArrow))
 		{
 			direction = Vector2.up;
-			transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
 
 		}
 		else if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
 			direction = Vector2.left;
-			transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 90);
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 90);
 		}
 		else if (Input.GetKeyDown(KeyCode.DownArrow))
 		{
 			direction = Vector2.down;
-			transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 180);
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 180);
 		}
 		else if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
 			direction = Vector2.right;
-			transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -90);
+			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -90);
 		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
 		hitSomething = true;
+		Instantiate(Confetti, transform.position, transform.rotation);
 	}
 }

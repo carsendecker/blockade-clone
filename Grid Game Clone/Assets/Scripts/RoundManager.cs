@@ -12,17 +12,20 @@ public class RoundManager : MonoBehaviour
 	public int MaxScore;
 	public Transform[] PlayerSpawnPoints;
 	public GameObject[] PlayerObjects;
-	public Text EndText;
+	public Text EndText, ResetText;
+	public Image EndBackPanel;
 	public Text[] ScoreText;
+	public GameObject[] Maps;
 	
 	private AudioSource aso;
-	public AudioClip hitSound, dingSound;
+	public AudioClip hitSound, dingSound, selectSound;
 	
 
 	private PlayerMovement[] playerScripts = new PlayerMovement[2];
 	private bool betweenRounds, keepScoreVisible;
 	private int[] Scores = new int[2];
 	private bool menuOpen = true;
+	private int currentMap = 0;
 
 	
 	// Use this for initialization
@@ -35,6 +38,11 @@ public class RoundManager : MonoBehaviour
 		PlayerObjects[1].transform.position = PlayerSpawnPoints[1].position;
 
 		aso = GetComponent<AudioSource>();
+
+		SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Additive);
+
+		currentMap = Random.Range(0, Maps.Length);
+		Maps[currentMap].SetActive(true);
 
 	}
 	
@@ -56,13 +64,42 @@ public class RoundManager : MonoBehaviour
 		{
 			playerScripts[0].enabled = false;
 			playerScripts[1].enabled = false;
-			if (Input.anyKeyDown)
+			if (Input.GetKeyDown(KeyCode.Space))
 			{
 				menuOpen = false;
 				playerScripts[0].enabled = true;
 				playerScripts[1].enabled = true;
 				aso.PlayOneShot(dingSound);
 				SceneManager.UnloadSceneAsync("Menu");
+			}
+
+			if (Input.GetKeyDown(KeyCode.Alpha1))
+			{
+				Maps[currentMap].SetActive(false);
+				currentMap = 0;
+				Maps[currentMap].SetActive(true);
+				aso.PlayOneShot(selectSound);
+			}
+			else if (Input.GetKeyDown(KeyCode.Alpha2))
+			{
+				Maps[currentMap].SetActive(false);
+				currentMap = 1;
+				Maps[currentMap].SetActive(true);
+				aso.PlayOneShot(selectSound);
+			}
+			else if (Input.GetKeyDown(KeyCode.Alpha3))
+			{
+				Maps[currentMap].SetActive(false);
+				currentMap = 2;
+				Maps[currentMap].SetActive(true);
+				aso.PlayOneShot(selectSound);
+			}
+			else if (Input.GetKeyDown(KeyCode.Alpha4))
+			{
+				Maps[currentMap].SetActive(false);
+				currentMap = 3;
+				Maps[currentMap].SetActive(true);
+				aso.PlayOneShot(selectSound);
 			}
 		}
 		
@@ -140,6 +177,8 @@ public class RoundManager : MonoBehaviour
 		if (Scores[0] >= MaxScore || Scores[1] >= MaxScore)
 		{
 			EndText.enabled = true;
+			ResetText.enabled = true;
+			EndBackPanel.enabled = true;
 			
 			ScoreText[0].gameObject.transform.position = EndText.transform.position + new Vector3(-85f, 0f, 0f);
 			ScoreText[1].gameObject.transform.position = EndText.transform.position + new Vector3(85f, 0f, 0f);
@@ -167,6 +206,6 @@ public class RoundManager : MonoBehaviour
 	void ResetGame()
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Additive);
+		//SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Additive);
 	}
 }
