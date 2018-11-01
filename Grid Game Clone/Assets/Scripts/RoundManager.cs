@@ -103,42 +103,41 @@ public class RoundManager : MonoBehaviour
 			}
 		}
 		
+		
 		ScoreText[0].text = Scores[0].ToString();
 		ScoreText[1].text = Scores[1].ToString();
-		
-		if (!betweenRounds)
+
+		if (betweenRounds) return;
+		if (playerScripts[0].hitSomething || playerScripts[1].hitSomething)
 		{
-			if (playerScripts[0].hitSomething || playerScripts[1].hitSomething)
+			if (playerScripts[0].hitSomething && playerScripts[1].hitSomething)
 			{
-				if (playerScripts[0].hitSomething && playerScripts[1].hitSomething)
-				{
-					Scores[0]++;
-					Scores[1]++;
-					PlayerObjects[0].GetComponent<FlashSprite>().FlashObject(true);
-					ScoreText[0].GetComponent<FlashText>().FlashObject(true);
-					PlayerObjects[1].GetComponent<FlashSprite>().FlashObject(true);
-					ScoreText[1].GetComponent<FlashText>().FlashObject(true);
-				}
-				else if (playerScripts[0].hitSomething)
-				{
-					Scores[1]++;
-					PlayerObjects[0].GetComponent<FlashSprite>().FlashObject(true);
-					ScoreText[1].GetComponent<FlashText>().FlashObject(true);
-				}
-				else if (playerScripts[1].hitSomething)
-				{
-					Scores[0]++;
-					PlayerObjects[1].GetComponent<FlashSprite>().FlashObject(true);
-					ScoreText[0].GetComponent<FlashText>().FlashObject(true);
-				}
-
-				ScoreText[0].enabled = true;
-				ScoreText[1].enabled = true;
-				
-				aso.PlayOneShot(hitSound);
-
-				StartCoroutine(NewRound());
+				Scores[0]++;
+				Scores[1]++;
+				PlayerObjects[0].GetComponent<FlashSprite>().FlashObject(true);
+				ScoreText[0].GetComponent<FlashText>().FlashObject(true);
+				PlayerObjects[1].GetComponent<FlashSprite>().FlashObject(true);
+				ScoreText[1].GetComponent<FlashText>().FlashObject(true);
 			}
+			else if (playerScripts[0].hitSomething)
+			{
+				Scores[1]++;
+				PlayerObjects[0].GetComponent<FlashSprite>().FlashObject(true);
+				ScoreText[1].GetComponent<FlashText>().FlashObject(true);
+			}
+			else if (playerScripts[1].hitSomething)
+			{
+				Scores[0]++;
+				PlayerObjects[1].GetComponent<FlashSprite>().FlashObject(true);
+				ScoreText[0].GetComponent<FlashText>().FlashObject(true);
+			}
+
+			ScoreText[0].enabled = true;
+			ScoreText[1].enabled = true;
+				
+			aso.PlayOneShot(hitSound);
+
+			StartCoroutine(NewRound());
 		}
 	}
 
@@ -174,6 +173,7 @@ public class RoundManager : MonoBehaviour
 		PlayerObjects[1].GetComponent<FlashSprite>().FlashObject(false);
 		ScoreText[1].GetComponent<FlashText>().FlashObject(false);
 
+		//If a player reaches the max score to win
 		if (Scores[0] >= MaxScore || Scores[1] >= MaxScore)
 		{
 			EndText.enabled = true;
@@ -186,6 +186,7 @@ public class RoundManager : MonoBehaviour
 			keepScoreVisible = true;
 			aso.PlayOneShot(dingSound);
 		}
+		//Otherwise start a new round
 		else
 		{
 			ScoreText[0].enabled = false;
@@ -196,9 +197,10 @@ public class RoundManager : MonoBehaviour
 			playerScripts[0].enabled = true;
 			playerScripts[1].enabled = true;
 
-
 			playerScripts[0].hitSomething = false;
 			playerScripts[1].hitSomething = false;
+			playerScripts[0].BulletCount = playerScripts[0].MaxBullets;
+			playerScripts[1].BulletCount = playerScripts[1].MaxBullets;
 			betweenRounds = false;
 		}
 	}
