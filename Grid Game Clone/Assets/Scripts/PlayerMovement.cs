@@ -1,34 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour {
-
-    private Rigidbody2D rb;
-	private Vector2 direction;
-	private Vector3 lastPosition;
-	private Quaternion newRotation;
-	private AudioSource aso;
-	private float moveTimer;
-	private bool stopped;
 	
+	public int PlayerNumber;
 	[HideInInspector] public bool hitSomething;
 	[HideInInspector] public Quaternion startRotation;
 	public float MoveSpeed;
 	public int MaxBullets;
 	[HideInInspector] public int BulletCount;
-	public int PlayerNumber;
 	public GameObject TrailObject;
 	public GameObject Confetti;
+	public GameObject MainCam;
 	public GameObject Bullet;
+	public GameObject[] BulletUI;
+	
+	private Vector3 direction;
+	private Vector3 lastPosition;
+	private Quaternion newRotation;
+	private AudioSource aso;
+	private float moveTimer;
+	private bool stopped;
+	private Color playerColor;
 
 	// Use this for initialization
 	void Start ()
 	{
-		rb = GetComponent<Rigidbody2D>();
 		aso = GetComponent<AudioSource>();
 		startRotation = transform.rotation;
 		BulletCount = MaxBullets;
+		playerColor = GetComponent<SpriteRenderer>().color;
+
+		GameObject.Find("P" + PlayerNumber + " Img").GetComponent<Image>().color = playerColor;
 	}
 
 	private void OnEnable()
@@ -43,6 +48,12 @@ public class PlayerMovement : MonoBehaviour {
 			direction = Vector2.up;
 			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
 		}
+		foreach (var element in BulletUI)
+		{
+			element.SetActive(true);
+		}
+
+		moveTimer = 0;
 	}
 
 	// Update is called once per frame
@@ -62,75 +73,77 @@ public class PlayerMovement : MonoBehaviour {
 		if (moveTimer >= MoveSpeed)
 		{
 			lastPosition = transform.position;
-			rb.position += direction;
 			transform.rotation = newRotation;
-			Instantiate(TrailObject, lastPosition, transform.rotation);
+			transform.position += direction;
+			GameObject newWall = Instantiate(TrailObject, lastPosition, transform.rotation);
+			newWall.GetComponent<SpriteRenderer>().color = playerColor;
 			moveTimer = 0;
 		}
 	}
 
 	void ChangeDirectionP1()
 	{
-		if (Input.GetKeyDown(KeyCode.W) && direction != Vector2.down)
+		if (Input.GetKeyDown(KeyCode.W) && direction != Vector3.down)
 		{
 			direction = Vector2.up;
 			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
 		}
-		else if (Input.GetKeyDown(KeyCode.A) && direction != Vector2.right)
+		else if (Input.GetKeyDown(KeyCode.A) && direction != Vector3.right)
 		{
 			direction = Vector2.left;
 			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 90);
 		}
-		else if (Input.GetKeyDown(KeyCode.S) && direction != Vector2.up)
+		else if (Input.GetKeyDown(KeyCode.S) && direction != Vector3.up)
 		{
 			direction = Vector2.down;
 			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 180);
 		}
-		else if (Input.GetKeyDown(KeyCode.D) && direction != Vector2.left)
+		else if (Input.GetKeyDown(KeyCode.D) && direction != Vector3.left)
 		{
 			direction = Vector2.right;
 			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -90);		
 		}
 
-		if (Input.GetKeyDown(KeyCode.E) && BulletCount > 0)
+		if (Input.GetKeyDown(KeyCode.E) && BulletCount > 0 && !stopped)
 		{
 			BulletCount--;
 			GameObject newBullet = Instantiate(Bullet, transform.position + transform.up, transform.rotation);
 			newBullet.GetComponent<ImpactObject>().OwnerPlayerNumber = PlayerNumber;
 			aso.Play();
+			BulletUI[BulletCount].SetActive(false);
 		}
 	}
 	
 	void ChangeDirectionP2()
 	{
-		if (Input.GetKeyDown(KeyCode.UpArrow) && direction != Vector2.down)
+		if (Input.GetKeyDown(KeyCode.UpArrow) && direction != Vector3.down)
 		{
 			direction = Vector2.up;
 			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
-
 		}
-		else if (Input.GetKeyDown(KeyCode.LeftArrow) && direction != Vector2.right)
+		else if (Input.GetKeyDown(KeyCode.LeftArrow) && direction != Vector3.right)
 		{
 			direction = Vector2.left;
 			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 90);
 		}
-		else if (Input.GetKeyDown(KeyCode.DownArrow) && direction != Vector2.up)
+		else if (Input.GetKeyDown(KeyCode.DownArrow) && direction != Vector3.up)
 		{
 			direction = Vector2.down;
 			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 180);
 		}
-		else if (Input.GetKeyDown(KeyCode.RightArrow) && direction != Vector2.left)
+		else if (Input.GetKeyDown(KeyCode.RightArrow) && direction != Vector3.left)
 		{
 			direction = Vector2.right;
 			newRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -90);
 		}
 		
-		if (Input.GetKeyDown(KeyCode.RightShift) && BulletCount > 0)
+		if (Input.GetKeyDown(KeyCode.RightShift) && BulletCount > 0 && !stopped)
 		{
 			BulletCount--;
 			GameObject newBullet = Instantiate(Bullet, transform.position + transform.up, transform.rotation);
 			newBullet.GetComponent<ImpactObject>().OwnerPlayerNumber = PlayerNumber;
 			aso.Play();
+			BulletUI[BulletCount].SetActive(false);
 		}
 	}
 
@@ -146,6 +159,7 @@ public class PlayerMovement : MonoBehaviour {
 		else
 		{
 			hitSomething = true;
+			MainCam.GetComponent<CameraShake>().ShakeCamera(0.1f);
 			Instantiate(Confetti, transform.position, transform.rotation);
 		}
 	

@@ -27,37 +27,39 @@ public class ImpactObject : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.CompareTag("Bullet") && other.GetComponent<ImpactObject>().OwnerPlayerNumber != OwnerPlayerNumber)
+		GameObject player = Instantiate(AudioPlayer);
+		AudioSource sound = player.GetComponent<AudioSource>();
+		if (other.CompareTag("Bullet"))
 		{
-			Instantiate(BulletExplodeParticle, transform.position, transform.rotation);
-			GameObject sound = Instantiate(AudioPlayer);
-			sound.GetComponent<AudioSource>().PlayOneShot(HitSound);
-			Destroy(gameObject);
+			if (other.GetComponent<ImpactObject>().OwnerPlayerNumber != OwnerPlayerNumber)
+			{
+				Instantiate(BulletExplodeParticle, transform.position, transform.rotation);
+				sound.PlayOneShot(HitSound);
+				Destroy(gameObject);
+			}
 		}
 		else if (other.CompareTag("Player"))
 		{
 			if (other.GetComponent<PlayerMovement>().PlayerNumber != OwnerPlayerNumber)
 			{
 				Instantiate(BulletExplodeParticle, transform.position, transform.rotation);
-				GameObject sound = Instantiate(AudioPlayer);
-				sound.GetComponent<AudioSource>().PlayOneShot(PlayerHitSound);
+				sound.PlayOneShot(PlayerHitSound);
 				Destroy(gameObject);
 			}
 		}
 		else if (other.CompareTag("Wall"))
 		{
-			Instantiate(WallExplodeParticle, other.transform.position, transform.rotation);
+			GameObject newWallParticle = Instantiate(WallExplodeParticle, other.transform.position, transform.rotation);
+			newWallParticle.GetComponent<ParticleSystem>().startColor = other.GetComponent<SpriteRenderer>().color;
 			//Instantiate(BulletExplodeParticle, transform.position, transform.rotation);
-			GameObject sound = Instantiate(AudioPlayer);
-			sound.GetComponent<AudioSource>().PlayOneShot(DestroySound);
+			sound.PlayOneShot(DestroySound);
 			Destroy(other.gameObject);
 			Destroy(gameObject);
 		}
 		else
 		{
 			Instantiate(BulletExplodeParticle, transform.position, transform.rotation);
-			GameObject sound = Instantiate(AudioPlayer);
-			sound.GetComponent<AudioSource>().PlayOneShot(HitSound);
+			sound.PlayOneShot(HitSound);
 			Destroy(gameObject);
 		}
 	}

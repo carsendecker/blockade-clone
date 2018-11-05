@@ -99,7 +99,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b69e43c4de41b4e06b4ffe12a29388db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.08
+  moveSpeed: 0.04
+  OwnerPlayerNumber: 0
   WallExplodeParticle: {fileID: 1673158859361954, guid: 6f3e85ac8ff954e1988cb9123830e42b,
     type: 2}
   BulletExplodeParticle: {fileID: 1234657449078916, guid: a88e03b83b7de47b6b3e8bb5d6b56af6,
